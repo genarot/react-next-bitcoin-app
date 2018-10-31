@@ -2,6 +2,7 @@ import Navegation from "../components/Navegation/Navegation";
 import MasterPage from "../components/Master";
 import fetch from 'isomorphic-unfetch';
 import Noticias from "../components/Noticias";
+import Eventos from "../components/Eventos";
 
 const Index = (props) => (
     <MasterPage>
@@ -44,6 +45,8 @@ const Index = (props) => (
             </div>
             <div className="col-md-4">
                 <h2>Proximos eventos</h2>
+                <Eventos 
+                    eventos={props.eventos}/>
             </div>
         </div>
     </MasterPage>
@@ -54,15 +57,18 @@ Index.getInitialProps = async() => {
 
         const precio = await fetch('https://api.coinmarketcap.com/v2/ticker/1/');
         const noticias = await fetch(`https://newsapi.org/v2/everything/?q=bitcoin&apiKey=1976374f9d1446b290be434e147ea4de&language=es`);
+        const eventos = await fetch('https://www.eventbriteapi.com/v3/events/search/?q=managua&location.address=Nicaragua&token=37IC2UCENTI4KE3DPJ3W');
 
         const resPrecio = await precio.json();
         const resNoticias =await noticias.json();
+        const resEventos = await eventos.json();
         // {
         //     console.log(resNoticias);
         // }
         return {
             precioBitcoin: resPrecio.data.quotes.USD,
-            noticias: resNoticias.articles
+            noticias: resNoticias.articles,
+            eventos: resEventos.events
         }
     }catch(_err) {
         {console.error(_err)}
